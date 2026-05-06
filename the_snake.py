@@ -100,6 +100,37 @@ class Snake(GameObject):
     def get_head_position(self):
         """Возвращает позицию головы змейки."""
         return self.positions[0]
+    
+    def move(self):
+        """Обновляет позицию змейки на игровом поле."""
+        head = self.get_head_position()
+        x, y = self.direction
+        
+        new_head = ((head[0] + (x * GRID_SIZE)) % SCREEN_WIDTH,
+                    (head[1] + (y * GRID_SIZE)) % SCREEN_HEIGHT)
+        
+        self.positions.insert(0, new_head)
+        
+        if len(self.positions) > self.length:
+            self.last = self.positions.pop()
+        else:
+            self.last = None
+    
+    def draw(self, surface):
+        """Отрисовывает змейку на игровой поверхности."""
+        for position in self.positions[:-1]:
+            rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
+            pygame.draw.rect(surface, self.body_color, rect)
+            pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
+        
+        head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
+        pygame.draw.rect(surface, self.body_color, head_rect)
+        pygame.draw.rect(surface, BORDER_COLOR, head_rect, 1)
+        
+        if self.last:
+            last_rect = pygame.Rect(self.last, (GRID_SIZE, GRID_SIZE))
+            pygame.draw.rect(surface, BOARD_BACKGROUND_COLOR, last_rect)
+
 
 
 def main():
