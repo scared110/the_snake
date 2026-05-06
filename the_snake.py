@@ -40,7 +40,36 @@ clock = pygame.time.Clock()
 
 
 # Тут опишите все классы игры.
-...
+class GameObject:
+    """Базовый класс для всех игровых объектов."""
+    def __init__(self, position=None, body_color=None):
+        """Инициализирует базовый игровой объект."""
+        self.position = position
+        self.body_color = body_color
+
+    def draw(self, surface):
+         """Абстрактный метод для отрисовки объекта."""
+    pass
+
+class Apple(GameObject):
+    """Класс яблока, наследуется от GameObject."""
+    
+    def __init__(self):
+        """Инициализирует яблоко со случайной позицией."""
+        super().__init__(body_color=APPLE_COLOR)
+        self.randomize_position()
+    
+    def randomize_position(self):
+        """Устанавливает случайную позицию яблока на игровом поле."""
+    x = randint(0, GRID_WIDTH - 1) * GRID_SIZE
+    y = randint(0, GRID_HEIGHT - 1) * GRID_SIZE
+    self.position = (x, y)
+       
+    def draw(self, surface):
+        """Отрисовывает яблоко на игровой поверхности."""
+    rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
+    pygame.draw.rect(surface, self.body_color, rect)
+    pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
 
 
 def main():
