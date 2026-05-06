@@ -83,6 +83,11 @@ class Snake(GameObject):
     
     def reset(self):
         """Сбрасывает змейку в начальное состояние."""
+        if hasattr(self, 'positions'):
+            for position in self.positions:
+                rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
+                pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, rect)
+        
         center_x = SCREEN_WIDTH // 2
         center_y = SCREEN_HEIGHT // 2
         center_x = (center_x // GRID_SIZE) * GRID_SIZE
@@ -130,7 +135,7 @@ class Snake(GameObject):
         if self.last:
             last_rect = pygame.Rect(self.last, (GRID_SIZE, GRID_SIZE))
             pygame.draw.rect(surface, BOARD_BACKGROUND_COLOR, last_rect)
-            
+
 def handle_keys(snake):
     """Обрабатывает нажатия клавиш для управления змейкой."""
     for event in pygame.event.get():
