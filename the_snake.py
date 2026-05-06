@@ -1,4 +1,4 @@
-from random import choice, randint
+from random import randint
 
 import pygame
 
@@ -39,9 +39,9 @@ pygame.display.set_caption('Змейка')
 clock = pygame.time.Clock()
 
 
-# Тут опишите все классы игры.
 class GameObject:
     """Базовый класс для всех игровых объектов."""
+
     def __init__(self, position=None, body_color=None):
         """Инициализирует базовый игровой объект."""
         self.position = position
@@ -50,6 +50,7 @@ class GameObject:
     def draw(self, surface):
          """Абстрактный метод для отрисовки объекта."""
     pass
+
 
 class Apple(GameObject):
     """Класс яблока, наследуется от GameObject."""
@@ -70,6 +71,7 @@ class Apple(GameObject):
     rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
     pygame.draw.rect(surface, self.body_color, rect)
     pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
+
 
 class Snake(GameObject):
     """Класс змейки, наследуется от GameObject."""
@@ -136,6 +138,7 @@ class Snake(GameObject):
             last_rect = pygame.Rect(self.last, (GRID_SIZE, GRID_SIZE))
             pygame.draw.rect(surface, BOARD_BACKGROUND_COLOR, last_rect)
 
+
 def handle_keys(snake):
     """Обрабатывает нажатия клавиш для управления змейкой."""
     for event in pygame.event.get():
@@ -157,18 +160,44 @@ def handle_keys(snake):
 def main():
     # Инициализация PyGame:
     pygame.init()
-    # Тут нужно создать экземпляры классов.
-    ...
 
-    # while True:
-    #     clock.tick(SPEED)
+    snake = Snake()
+    apple = Apple()
 
-        # Тут опишите основную логику игры.
-        # ...
+    while True:
+        clock.tick(SPEED)
+
+        handle_keys(snake)
+
+        snake.update_direction()
+
+        snake.move()
+
+        if snake.get_head_position() == apple.position:
+            snake.length += 1
+            apple.randomize_position()
+
+            while apple.position in snake.positions:
+                apple.randomize_position()
+
+        if snake.get_head_position() in snake.positions[1:]:
+            pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR,
+                             (0, 0, SCREEN_WIDTH, SCREEN_HEIGHT))
+            snake.reset()
+            apple.randomize_position()
+
+            while apple.position in snake.positions:
+                apple.randomize_position()
+
+        snake.draw(screen)
+        apple.draw(screen)
+
+        pygame.display.update()
 
 
 if __name__ == '__main__':
     main()
+
 
 
 # Метод draw класса Apple
